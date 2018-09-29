@@ -5,10 +5,6 @@
  */
 package bowling;
 
-import bowling.Frame;
-import bowling.MultiPlayerGame;
-import bowling.SinglePlayerGame;
-import java.time.Clock;
 import java.util.HashMap;
 
 /**
@@ -18,7 +14,7 @@ import java.util.HashMap;
 public class MultiplayerBowlingGame implements MultiPlayerGame{
     private HashMap<String, SinglePlayerGame> partie;
     private String[] joueurs;
-    private int n_joueur; 
+    private int n_joueur, joueursAyantFini; 
     
     
     @Override
@@ -29,8 +25,8 @@ public class MultiplayerBowlingGame implements MultiPlayerGame{
         
         partie = new HashMap<>();
         n_joueur = 0;
-        
         joueurs = playerNames;
+        joueursAyantFini = 0;
                 
         for(String player: playerNames){
             if(partie.containsKey(player)){
@@ -45,36 +41,72 @@ public class MultiplayerBowlingGame implements MultiPlayerGame{
 
     @Override
     public String lancer(int nombreDeQuillesAbattues) throws Exception {
-        SinglePlayerGame joueurActuel = partie.get(joueurs[n_joueur]);
+        String nomJoueurActuel = joueurs[n_joueur];
+        SinglePlayerGame joueurActuel = partie.get(nomJoueurActuel);
         Frame tourActuel;
         
         try{
+            
             joueurActuel.lancer(nombreDeQuillesAbattues);
 
             tourActuel = joueurActuel.getCurrentFrame();
 
             if(tourActuel.isFinished()){
+                if(tourActuel instanceof TenthFrame){                   
+                    joueursAyantFini++;
+                    n_joueur = (n_joueur + 1)%joueurs.length;
+                    System.out.println("---------");
+                    
+                    return "Le joueur \""+nomJoueurActuel+"\" a terminé\n"+toString();
+                }
+                
                 n_joueur = (n_joueur + 1)%joueurs.length;
                 System.out.println("-----");
             }
-
+            
             return toString();
+            
         }catch(UnsupportedOperationException e){
-            return "Le joueur "+joueurs[n_joueur]+" a terminé";
+            
+            gameOver();
+            
+            throw new Exception("La partie est finie");
+                        
         }
     }
-
+    
+    
     @Override
     public int scoreFor(String playerName) throws Exception {
         return partie.get(playerName).score();
     }
+      
     
-  
+    private void gameOver() throws Exception{
+        
+    }
+    
     @Override
     public String toString(){
+        String infoProchainTir="";
         String joueurActuel = joueurs[n_joueur];
         Frame tourActuel = partie.get(joueurActuel).getCurrentFrame();
-        return String.format("Prochain tir : joueur %s, tour n° %s, boule n° %s", joueurActuel, tourActuel.getFrameNumber(), tourActuel.getBallsThrown());
+        
+        if(tourActuel.isFinished() && !(tourActuel instanceof TenthFrame)){
+            tourActuel = tourActuel.next();
+        }
+        
+        boolean dernierLancer = tourActuel.isFinished() && tourActuel instanceof TenthFrame;
+        
+        if(!dernierLancer){
+            infoProchainTir = "Prochain tir : joueur "+joueurActuel
+                            +", tour n° "+tourActuel.getFrameNumber()
+                            +", boule n° "+(tourActuel.getBallsThrown()+1);
+        }
+        
+        return infoProchainTir;
+        
+        
     }
     
     
