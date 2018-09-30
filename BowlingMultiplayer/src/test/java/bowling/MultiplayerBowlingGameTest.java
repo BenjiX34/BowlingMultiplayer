@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package bowling;
 
 import org.junit.After;
@@ -10,7 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- *
+ * 
  * @author Benjamin Bardy
  */
 public class MultiplayerBowlingGameTest {
@@ -26,19 +21,19 @@ public class MultiplayerBowlingGameTest {
         System.out.println("--------------------");
     }
 
-    //@Test
+    @Test
     public void initialisationTest() throws Exception{
         String[] joueurs = {"a", "b", "c"};
         System.out.println(partie.startNewGame(joueurs));
     }
     
-    //@Test (expected=Exception.class)
+    @Test (expected=Exception.class)
     public void deuxJoueursDeMemeNom() throws Exception{
         String[] joueurs = {"a", "a", "c"};
         System.out.println(partie.startNewGame(joueurs));
     }
     
-    //@Test
+    @Test
     public void partieSolo() throws Exception{
         String[] joueurs = {"a"};
         System.out.println(partie.startNewGame(joueurs));
@@ -46,7 +41,7 @@ public class MultiplayerBowlingGameTest {
         printScores(joueurs);
     }
     
-    //@Test (expected=Exception.class)
+    @Test (expected=Exception.class)
     public void partieTropLongue() throws Exception{
         String[] joueurs = {"a"};
         System.out.println(partie.startNewGame(joueurs));
@@ -54,7 +49,7 @@ public class MultiplayerBowlingGameTest {
         printScores(joueurs);
     }  
        
-    //@Test
+    @Test
     public void partieDuo() throws Exception{
         String[] joueurs = {"a", "b"};
         System.out.println(partie.startNewGame(joueurs));

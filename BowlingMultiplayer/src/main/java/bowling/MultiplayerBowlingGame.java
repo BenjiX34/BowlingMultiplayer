@@ -1,22 +1,24 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package bowling;
 
 import java.util.HashMap;
 
 /**
- *
- * @author pedago
+ * Classe qui affiche une partie de bowling à plusieurs tour par tour,
+ * et renvoie le score de chaque joueur
+ * @author Benjamin Bardy
  */
 public class MultiplayerBowlingGame implements MultiPlayerGame{
     private HashMap<String, SinglePlayerGame> partie;
     private String[] joueurs;
-    private int n_joueur, joueursAyantFini; 
+    private int n_joueur; 
     
-    
+    /**
+     * Méthode à exécuter au début d'une nouvelle partie
+     * 
+     * @param playerNames La liste de noms des joueurs
+     * @return L'état du prochain tour
+     * @throws Exception 
+     */
     @Override
     public String startNewGame(String[] playerNames) throws Exception {
         if(playerNames.length == 0){
@@ -26,7 +28,6 @@ public class MultiplayerBowlingGame implements MultiPlayerGame{
         partie = new HashMap<>();
         n_joueur = 0;
         joueurs = playerNames;
-        joueursAyantFini = 0;
                 
         for(String player: playerNames){
             if(partie.containsKey(player)){
@@ -39,6 +40,13 @@ public class MultiplayerBowlingGame implements MultiPlayerGame{
         return toString();
     }
 
+    /**
+     * Méthode à être appelée à chaque lancer de boule
+     * 
+     * @param nombreDeQuillesAbattues le nombre de quilles abattues lors du lancer
+     * @return L'état du prochain lancer
+     * @throws Exception 
+     */
     @Override
     public String lancer(int nombreDeQuillesAbattues) throws Exception {
         String nomJoueurActuel = joueurs[n_joueur];
@@ -53,7 +61,6 @@ public class MultiplayerBowlingGame implements MultiPlayerGame{
 
             if(tourActuel.isFinished()){
                 if(tourActuel instanceof TenthFrame){                   
-                    joueursAyantFini++;
                     n_joueur = (n_joueur + 1)%joueurs.length;
                     System.out.println("---------");
                     
@@ -68,21 +75,27 @@ public class MultiplayerBowlingGame implements MultiPlayerGame{
             
         }catch(UnsupportedOperationException e){
             
-            gameOver();
+            scoresFinaux();
             
             throw new Exception("La partie est finie");
                         
         }
     }
     
-    
+    /**
+     * @param playerName le nom du joueur dont on veut connaître le score
+     * @return le score du joueur
+     * @throws Exception 
+     */
     @Override
     public int scoreFor(String playerName) throws Exception {
         return partie.get(playerName).score();
     }
       
-    
-    private void gameOver() throws Exception{
+    /**
+     * Affiche le score final et le classement à la fin de la partie
+     */
+    private void scoresFinaux(){
         
     }
     
