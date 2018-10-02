@@ -8,7 +8,7 @@
     <dependencies>
         <dependency>
             <groupId>fr.irit.bastide</groupId>
-            <artifactId>BowlingMavenCorrection</artifactId>
+            <artifactId>BowlingSolo</artifactId>
             <version>1.0</version>
         </dependency>
         <dependency>

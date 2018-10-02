@@ -1,5 +1,7 @@
 package bowling;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 
 /**
@@ -8,7 +10,9 @@ import java.util.HashMap;
  * @author Benjamin Bardy
  */
 public class MultiplayerBowlingGame implements MultiPlayerGame{
+    private final String SEPARATEUR="-------";
     private HashMap<String, SinglePlayerGame> partie;
+    private HashMap<Integer, String> scoresFinaux;
     private String[] joueurs;
     private int n_joueur; 
     
@@ -28,6 +32,7 @@ public class MultiplayerBowlingGame implements MultiPlayerGame{
         partie = new HashMap<>();
         n_joueur = 0;
         joueurs = playerNames;
+        scoresFinaux = new HashMap<>();
                 
         for(String player: playerNames){
             if(partie.containsKey(player)){
@@ -62,13 +67,17 @@ public class MultiplayerBowlingGame implements MultiPlayerGame{
             if(tourActuel.isFinished()){
                 if(tourActuel instanceof TenthFrame){                   
                     n_joueur = (n_joueur + 1)%joueurs.length;
-                    System.out.println("---------");
                     
-                    return "Le joueur \""+nomJoueurActuel+"\" a terminé\n"+toString();
+                    scoresFinaux.put(joueurActuel.score(), nomJoueurActuel);
+                                        
+                    return SEPARATEUR+"\n"+
+                            "Le joueur \""+nomJoueurActuel+"\" a terminé"+"\n"+
+                           SEPARATEUR+"\n"+
+                            toString();
                 }
                 
                 n_joueur = (n_joueur + 1)%joueurs.length;
-                System.out.println("-----");
+                System.out.println(SEPARATEUR);
             }
             
             return toString();
@@ -96,6 +105,16 @@ public class MultiplayerBowlingGame implements MultiPlayerGame{
      * Affiche le score final et le classement à la fin de la partie
      */
     private void scoresFinaux(){
+        System.out.println("-----SCORE FINAUX-----");
+        Object[] scores = scoresFinaux.keySet().toArray();
+        Arrays.sort(scores, Collections.reverseOrder());
+        for(int place=0; place<scores.length; place++){
+            System.out.println(String.format("%d%s : %s (%s pts)",
+                    place+1, (place+1 == 1)? "er": (place+1 == 2)? "nd" : "eme",  
+                    scoresFinaux.get(scores[place]), scores[place]));
+        }
+        
+        
         
     }
     

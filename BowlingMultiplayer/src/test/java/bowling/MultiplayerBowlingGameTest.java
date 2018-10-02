@@ -1,6 +1,7 @@
 package bowling;
 
 import org.junit.After;
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -38,7 +39,7 @@ public class MultiplayerBowlingGameTest {
         String[] joueurs = {"a"};
         System.out.println(partie.startNewGame(joueurs));
         rollMany(20,3);
-        printScores(joueurs);
+        assertEquals(20*3, partie.scoreFor("a"));
     }
     
     @Test (expected=Exception.class)
@@ -46,7 +47,6 @@ public class MultiplayerBowlingGameTest {
         String[] joueurs = {"a"};
         System.out.println(partie.startNewGame(joueurs));
         rollMany(21,3);
-        printScores(joueurs);
     }  
        
     @Test
@@ -54,7 +54,8 @@ public class MultiplayerBowlingGameTest {
         String[] joueurs = {"a", "b"};
         System.out.println(partie.startNewGame(joueurs));
         rollMany(40,4);
-        printScores(joueurs);
+        assertEquals(20*4, partie.scoreFor("a"));
+        assertEquals(20*4, partie.scoreFor("b"));
     }
     
     @Test
@@ -62,7 +63,22 @@ public class MultiplayerBowlingGameTest {
         String[] joueurs = {"a", "b", "c"};
         System.out.println(partie.startNewGame(joueurs));
         rollMany(60,4);
-        printScores(joueurs);
+        assertEquals(20*4, partie.scoreFor("a"));
+        assertEquals(20*4, partie.scoreFor("b"));
+        assertEquals(20*4, partie.scoreFor("c"));
+    }
+    
+    @Test
+    public void partieAvecStrikeDernierTour() throws Exception{
+        String[] joueurs = {"a", "b", "c"};
+        System.out.println(partie.startNewGame(joueurs));
+        rollMany(54,4);
+        rollStrike(); //Pour le dernier tour, "a" fait un strike
+        rollMany(6,4); //Mais pas les autres joueurs
+        
+        assertEquals(20*4+10, partie.scoreFor("a"));
+        assertEquals(20*4, partie.scoreFor("b"));
+        assertEquals(20*4, partie.scoreFor("c"));
     }
     
    
